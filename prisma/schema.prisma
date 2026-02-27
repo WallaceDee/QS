@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model ContactSubmission {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  phone     String
+  brand     String?
+  website   String?
+  createdAt DateTime @default(now())
+}
+
+model EmailSettings {
+  id        Int      @id @default(autoincrement())
+  host      String
+  port      Int
+  secure    Boolean  @default(false)
+  user      String
+  pass      String
+  to        String   // 收件邮箱
+  updatedAt DateTime @updatedAt
+}
