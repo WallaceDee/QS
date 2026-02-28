@@ -47,7 +47,7 @@ export function ServicesGrid() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6  mx-auto px-20 max-w-[1200px]">
+        <div className="grid md:grid-cols-2 gap-6  mx-auto max-w-[1200px]">
           {services.map((service) => (
             <Card key={service.title} className="bg-[oklch(0.15_0.02_250)] border-white/10 hover:border-[oklch(0.7_0.22_265)]/50 transition-colors">
               <CardHeader>

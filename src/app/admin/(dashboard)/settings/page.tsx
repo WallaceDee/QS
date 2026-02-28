@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Eye, EyeOff } from "lucide-react"
 
 type Settings = {
   host: string
@@ -31,6 +32,7 @@ export default function AdminSettingsPage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
+  const [showPass, setShowPass] = useState(false)
 
   useEffect(() => {
     fetch("/api/admin/settings", { credentials: "include" })
@@ -127,13 +129,22 @@ export default function AdminSettingsPage() {
           </div>
           <div>
             <label className="text-sm font-medium text-white">发件密码 / 授权码</label>
-            <Input
-              type="password"
-              value={formSettings.pass}
-              onChange={(e) => setSettings({ ...formSettings, pass: e.target.value })}
-              className="mt-1 bg-[oklch(0.12_0.02_250)] border-white/20 text-white"
-              placeholder="留空表示不修改（仅首次或修改时必填）"
-            />
+            <div className="relative mt-1">
+              <Input
+                type={showPass ? "text" : "password"}
+                value={formSettings.pass}
+                onChange={(e) => setSettings({ ...formSettings, pass: e.target.value })}
+                className="pr-10 bg-[oklch(0.12_0.02_250)] border-white/20 text-white"
+                placeholder="留空表示不修改（仅首次或修改时必填）"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPass(!showPass)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white"
+              >
+                {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
           </div>
           <div>
             <label className="text-sm font-medium text-white">收件邮箱</label>

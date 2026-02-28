@@ -73,7 +73,7 @@ export default function MarketingPage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white">服务内容</h2>
           </div>
-          <div className="grid md:grid-cols-2 gap-6 mx-auto px-20 max-w-[1200px]">
+          <div className="grid md:grid-cols-2 gap-6 mx-auto max-w-[1200px]">
             {services.map((service) => (
               <Card key={service.title} className="bg-[oklch(0.15_0.02_250)] border-white/10">
                 <CardHeader>
@@ -100,7 +100,7 @@ export default function MarketingPage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white">服务流程</h2>
           </div>
-          <div className="grid sm:grid-cols-4 gap-6 mx-auto px-20 max-w-[1200px]">
+          <div className="grid sm:grid-cols-4 gap-6 mx-auto max-w-[1200px]">
             {process.map((step, index) => (
               <div key={step.title} className="text-center">
                 <div className="mx-auto h-12 w-12 rounded-full bg-[oklch(0.7_0.22_265)] text-white flex items-center justify-center text-xl font-bold">

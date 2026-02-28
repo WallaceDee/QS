@@ -12,28 +12,43 @@ type Contact = {
   createdAt: string
 }
 
+type PaginatedResponse = {
+  list: Contact[]
+  total: number
+  page: number
+  pageSize: number
+  totalPages: number
+}
+
 export default function AdminContactsPage() {
-  const [list, setList] = useState<Contact[]>([])
+  const [data, setData] = useState<PaginatedResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [page, setPage] = useState(1)
 
   useEffect(() => {
-    fetch("/api/admin/contacts", { credentials: "include" })
+    setLoading(true)
+    fetch(`/api/admin/contacts?page=${page}`, { credentials: "include" })
       .then((res) => {
         if (res.status === 401) {
           window.location.href = "/admin/login"
-          return []
+          return null
         }
         if (!res.ok) throw new Error("加载失败")
         return res.json()
       })
-      .then(setList)
+      .then((data) => {
+        if (data) setData(data)
+      })
       .catch(() => setError("加载失败"))
       .finally(() => setLoading(false))
-  }, [])
+  }, [page])
 
   if (loading) return <p className="text-white/60">加载中…</p>
   if (error) return <p className="text-red-400">{error}</p>
+  if (!data) return null
+
+  const { list, total, pageSize, totalPages } = data
 
   return (
     <Card className="bg-[oklch(0.15_0.02_250)] border-white/10">
@@ -77,6 +92,29 @@ export default function AdminContactsPage() {
             </tbody>
           </table>
         </div>
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/10">
+            <span className="text-sm text-white/60">
+              共 {total} 条，第 {page}/{totalPages} 页
+            </span>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setPage(page - 1)}
+                disabled={page <= 1}
+                className="px-3 py-1 text-sm bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed rounded transition-colors"
+              >
+                上一页
+              </button>
+              <button
+                onClick={() => setPage(page + 1)}
+                disabled={page >= totalPages}
+                className="px-3 py-1 text-sm bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:cursor-not-allowed rounded transition-colors"
+              >
+                下一页
+              </button>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   )

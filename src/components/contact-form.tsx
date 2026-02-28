@@ -24,6 +24,13 @@ export function ContactForm() {
       setError("请填写电话")
       return
     }
+    // 电话正则验证：1开头的11位数字
+    const phoneRegex = /^1\d{10}$/
+    const phoneClean = phone.replace(/\s/g, "")
+    if (!phoneRegex.test(phoneClean)) {
+      setError("请填写有效的电话号码（1开头的11位数字）")
+      return
+    }
 
     setLoading(true)
     try {

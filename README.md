@@ -1,5 +1,25 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## 开发环境配置
+
+### 1. 创建环境变量文件
+
+项目使用 Prisma + SQLite，需要配置数据库路径和后台管理密码：
+
+```bash
+# 创建 .env 文件
+DATABASE_URL="file:./dev.db"
+ADMIN_PASSWORD="your-secure-password-here"
+```
+
+### 2. 初始化数据库
+
+```bash
+# 安装依赖并运行 Prisma 迁移
+npm i
+npx prisma migrate dev --name init
+```
+
 ## Getting Started
 
 First, run the development server:

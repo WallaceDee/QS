@@ -8,17 +8,34 @@ export async function GET() {
     return NextResponse.json({ error: "未授权" }, { status: 401 })
   }
   const row = await prisma.emailSettings.findFirst()
-  if (!row) {
-    return NextResponse.json(null)
+  if (row) {
+    return NextResponse.json({
+      host: row.host,
+      port: row.port,
+      secure: row.secure,
+      user: row.user,
+      pass: row.pass, // 不返回真实密码，前端留空表示不修改
+      to: row.to,
+    })
   }
-  return NextResponse.json({
-    host: row.host,
-    port: row.port,
-    secure: row.secure,
-    user: row.user,
-    pass: "", // 不返回真实密码，前端留空表示不修改
-    to: row.to,
-  })
+  // 数据库没有配置时，回显环境变量
+  const host = process.env.SMTP_HOST
+  const port = process.env.SMTP_PORT
+  const user = process.env.SMTP_USER
+  const pass = process.env.SMTP_PASS
+  const to = process.env.CONTACT_TO
+  const secure = process.env.SMTP_SECURE
+  if (host && port && user && to) {
+    return NextResponse.json({
+      host,
+      port: parseInt(port, 10) || 587,
+      secure: secure === "true",
+      user,
+      pass, // 环境变量的密码不返回前端
+      to,
+    })
+  }
+  return NextResponse.json(null)
 }
 
 export async function PUT(request: NextRequest) {

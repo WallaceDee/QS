@@ -68,7 +68,7 @@ export async function sendContactNotification(params: {
     ].join("\n")
     await transporter.sendMail({
       from: config.user,
-      to: config.to,
+      to: config.to.split(/[,;]/).map(e => e.trim()).filter(Boolean).join(","),
       subject: "趣搜官网 - 新留言",
       text: body,
     })

@@ -146,7 +146,7 @@ export function Footer() {
             <Link href="#" className="hover:text-[oklch(0.7_0.22_265)] transition-colors">服务条款</Link>
             <Link href="#" className="hover:text-[oklch(0.7_0.22_265)] transition-colors">网站地图</Link>
           </div> */}
-          <p>粤 ICP 备 XXXXX 号</p>
+          <p><a href="https://beian.miit.gov.cn/#/Integrated/index">粤ICP备2025469944号-1</a></p>
         </div>
       </div>
     </footer>

@@ -97,7 +97,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[oklch(0.08_0.02_250)]/90 backdrop-blur-md supports-[backdrop-filter]:bg-[oklch(0.08_0.02_250)]/60 shadow-lg hover:shadow-[0_4px_30px_oklch(0.7_0.22_265_/_15%)] transition-shadow duration-300">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2 mr-2">
           <img src="/logo.png" alt="趣搜科技" className="h-8 w-32 min-w-[120px] object-contain" />
         </Link>
 
@@ -218,14 +218,16 @@ export function Header() {
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="bg-[oklch(0.12_0.02_250)] border-white/10 w-[300px] sm:w-[350px]">
-            <div className="flex flex-col mt-10">
+            <div className="flex flex-col mt-10 h-[calc(100%-40px)]">
               {/* Nav Links */}
-              <nav className="flex flex-col space-y-1">
-                <Link href="/" className="text-lg font-medium text-white px-4 py-3 rounded-lg hover:bg-white/10 transition-colors">
+              <nav className="flex flex-col space-y-1 overflow-y-auto flex-1">
+                <Link href="/" className="block text-sm text-white/70 px-4 py-2.5 rounded-lg hover:bg-white/10 hover:text-white transition-colors">
                   首页
                 </Link>
                 <div className="pt-2">
-                  <div className="text-xs font-semibold text-[oklch(0.7_0.22_265)] uppercase tracking-wider px-4 py-2">核心服务</div>
+                  <Link href="/services" className="block text-sm font-medium text-white px-4 py-2.5 rounded-lg hover:bg-white/10 hover:text-white transition-colors">
+                    GEO 核心服务
+                  </Link>
                   {services.map((item) => (
                     <Link
                       key={item.href}
@@ -238,7 +240,9 @@ export function Header() {
                 </div>
                 
                 <div className="pt-2">
-                  <div className="text-xs font-semibold text-[oklch(0.7_0.22_265)] uppercase tracking-wider px-4 py-2">行业方案</div>
+                  <Link href="/solutions" className="block text-sm font-medium text-white px-4 py-2.5 rounded-lg hover:bg-white/10 hover:text-white transition-colors">
+                    行业解决方案
+                  </Link>
                   {solutions.map((item) => (
                     <Link
                       key={item.href}
@@ -251,7 +255,9 @@ export function Header() {
                 </div>
                 
                 <div className="pt-2">
-                  <div className="text-xs font-semibold text-[oklch(0.7_0.22_265)] uppercase tracking-wider px-4 py-2">智库资源</div>
+                  <Link href="/resources" className="block text-sm font-medium text-white px-4 py-2.5 rounded-lg hover:bg-white/10 hover:text-white transition-colors">
+                    趣搜智库
+                  </Link>
                   {resources.map((item) => (
                     <Link
                       key={item.href}
@@ -264,7 +270,9 @@ export function Header() {
                 </div>
                 
                 <div className="pt-2">
-                  <div className="text-xs font-semibold text-[oklch(0.7_0.22_265)] uppercase tracking-wider px-4 py-2">关于我们</div>
+                  <Link href="/about" className="block text-sm font-medium text-white px-4 py-2.5 rounded-lg hover:bg-white/10 hover:text-white transition-colors">
+                    关于我们
+                  </Link>
                   {about.map((item) => (
                     <Link
                       key={item.href}
@@ -276,16 +284,11 @@ export function Header() {
                   ))}
                 </div>
                 
-                <Link href="/contact" className="text-lg font-medium text-white px-4 py-3 rounded-lg hover:bg-white/10 transition-colors mt-2">
+                <Link href="/contact" className="block text-sm text-white/70 px-4 py-2.5 rounded-lg hover:bg-white/10 hover:text-white transition-colors mt-2">
                   联系我们
                 </Link>
               </nav>
-              
-              {/* CTA Buttons */}
-              <div className="mt-auto pt-6 space-y-3">
-                <Button variant="gradient" className="w-full">免费 AI 品牌诊断</Button>
-                <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">预约 GEO 内训</Button>
-              </div>
+             
             </div>
           </SheetContent>
         </Sheet>
