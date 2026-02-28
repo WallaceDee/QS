@@ -200,7 +200,7 @@ export function Header() {
         </div>
 
         {/* CTA Buttons */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-3 ml-2">
           <Button variant="gradient" size="sm" asChild>
             <Link href="/contact">免费 AI 品牌诊断</Link>
           </Button>

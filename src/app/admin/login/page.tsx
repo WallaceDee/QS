@@ -28,7 +28,7 @@ export default function AdminLoginPage() {
         return
       }
       router.push("/admin/contacts")
-      router.refresh()
+      await router.refresh()
     } catch {
       setError("网络错误")
     } finally {
