@@ -7,6 +7,9 @@ type Contact = {
   id: number
   name: string | null
   phone: string
+  email: string | null
+  company: string | null
+  message: string | null
   brand: string | null
   website: string | null
   createdAt: string
@@ -60,31 +63,31 @@ export default function AdminContactsPage() {
           <table className="w-full text-sm text-left text-white/80">
             <thead>
               <tr className="border-b border-white/20">
+                <th className="py-2 pr-4">邮箱</th>
+                <th className="py-2 pr-4">公司</th>
+                <th className="py-2 pr-4">需求</th>
                 <th className="py-2 pr-4">姓名</th>
                 <th className="py-2 pr-4">电话</th>
-                <th className="py-2 pr-4">品牌</th>
-                <th className="py-2 pr-4">官网</th>
                 <th className="py-2">提交时间</th>
               </tr>
             </thead>
             <tbody>
               {list.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-6 text-white/50 text-center">暂无留言</td>
+                  <td colSpan={6} className="py-6 text-white/50 text-center">暂无留言</td>
                 </tr>
               ) : (
                 list.map((row) => (
                   <tr key={row.id} className="border-b border-white/10">
-                    <td className="py-3 pr-4">{row.name ?? "—"}</td>
-                    <td className="py-3 pr-4">{row.phone}</td>
-                    <td className="py-3 pr-4">{row.brand ?? "—"}</td>
+                    <td className="py-3 pr-4">{row.email ?? "—"}</td>
+                    <td className="py-3 pr-4">{row.company ?? "—"}</td>
                     <td className="py-3 pr-4">
-                      {row.website ? (
-                        <a href={row.website} target="_blank" rel="noopener noreferrer" className="text-[oklch(0.7_0.22_265)] hover:underline truncate max-w-[200px] block">
-                          {row.website}
-                        </a>
+                      {row.message ? (
+                        <span className="line-clamp-2" title={row.message}>{row.message}</span>
                       ) : "—"}
                     </td>
+                    <td className="py-3 pr-4">{row.name ?? "—"}</td>
+                    <td className="py-3 pr-4">{row.phone}</td>
                     <td className="py-3">{new Date(row.createdAt).toLocaleString("zh-CN")}</td>
                   </tr>
                 ))

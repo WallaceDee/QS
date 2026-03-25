@@ -2,7 +2,15 @@ import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { sendContactNotification } from "@/lib/email"
 
-const MAX_LEN = { name: 200, phone: 50, brand: 200, website: 500 }
+const MAX_LEN = {
+  name: 200,
+  phone: 50,
+  brand: 200,
+  website: 500,
+  company: 200,
+  email: 200,
+  message: 5000,
+}
 
 function isValidUrl(s: string): boolean {
   try {
@@ -13,6 +21,10 @@ function isValidUrl(s: string): boolean {
   }
 }
 
+function isValidEmail(s: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -20,9 +32,15 @@ export async function POST(request: NextRequest) {
     const phone = typeof body.phone === "string" ? body.phone.trim().slice(0, MAX_LEN.phone) : ""
     const brand = typeof body.brand === "string" ? body.brand.trim().slice(0, MAX_LEN.brand) : undefined
     const website = typeof body.website === "string" ? body.website.trim().slice(0, MAX_LEN.website) : undefined
+    const company = typeof body.company === "string" ? body.company.trim().slice(0, MAX_LEN.company) : undefined
+    const email = typeof body.email === "string" ? body.email.trim().slice(0, MAX_LEN.email) : undefined
+    const message = typeof body.message === "string" ? body.message.trim().slice(0, MAX_LEN.message) : undefined
 
     if (!phone) {
       return NextResponse.json({ error: "电话不能为空" }, { status: 400 })
+    }
+    if (email && !isValidEmail(email)) {
+      return NextResponse.json({ error: "请填写有效的邮箱地址" }, { status: 400 })
     }
     if (website && !isValidUrl(website)) {
       return NextResponse.json({ error: "请填写有效的官网链接" }, { status: 400 })
@@ -32,7 +50,10 @@ export async function POST(request: NextRequest) {
       data: {
         name: name || null,
         phone,
-        brand: brand || null,
+        email: email || null,
+        company: company || null,
+        message: message || null,
+        brand: brand || company || null,
         website: website || null,
       },
     })
@@ -42,6 +63,9 @@ export async function POST(request: NextRequest) {
       phone: submission.phone,
       brand: submission.brand,
       website: submission.website,
+      company: company ?? null,
+      email: email ?? null,
+      message: message ?? null,
       createdAt: submission.createdAt,
     })
 

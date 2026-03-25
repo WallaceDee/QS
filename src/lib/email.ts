@@ -45,6 +45,9 @@ export async function sendContactNotification(params: {
   phone: string
   brand: string | null
   website: string | null
+  company?: string | null
+  email?: string | null
+  message?: string | null
   createdAt: Date
 }): Promise<{ ok: boolean; error?: string }> {
   const config = await getEmailConfig()
@@ -62,8 +65,11 @@ export async function sendContactNotification(params: {
     const body = [
       `姓名：${params.name ?? "未填"}`,
       `电话：${params.phone}`,
+      `邮箱：${params.email ?? "未填"}`,
+      `公司：${params.company ?? "未填"}`,
       `品牌：${params.brand ?? "未填"}`,
       `官网：${params.website ?? "未填"}`,
+      `需求：${params.message ?? "未填"}`,
       `提交时间：${dateStr}`,
     ].join("\n")
     await transporter.sendMail({

@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-blue: #0066FF;
+  --brand-blue-light: #E6F2FF;
+  --brand-blue-dark: #0052CC;
+  --brand-green: #00A86B;
+  --brand-green-light: #E6F7F1;
+  --brand-orange: #F97316;
+  --brand-orange-light: #FFF7ED;
+  --brand-gray: #1F2937;
+  --brand-gray-light: #6B7280;
+  --brand-bg: #F5F7FA;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--brand-bg);
+  color: var(--brand-gray);
+}
+
+@layer components {
+  .gradient-text {
+    background: linear-gradient(90deg, var(--brand-blue), var(--brand-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .gradient-bg {
+    background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-green) 100%);
+  }
+  
+  .glass-effect {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.95);
+  }
+  
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium text-white transition-all duration-300;
+    background: var(--brand-blue);
+  }
+  
+  .btn-primary:hover {
+    background: var(--brand-blue-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 102, 255, 0.3);
+  }
+  
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-all duration-300;
+    background: white;
+    color: var(--brand-gray);
+    border: 1px solid #E5E7EB;
+  }
+  
+  .btn-secondary:hover {
+    border-color: var(--brand-blue);
+    color: var(--brand-blue);
+    transform: translateY(-2px);
+  }
+  
+  .section-label {
+    @apply text-sm font-medium tracking-wider uppercase;
+    color: var(--brand-blue);
+  }
+  
+  .section-title {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold leading-tight;
+    color: var(--brand-gray);
+  }
+  
+  .section-description {
+    @apply text-base md:text-lg leading-relaxed;
+    color: var(--brand-gray-light);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F5F7FA;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+::selection {
+  background: rgba(0, 102, 255, 0.2);
+  color: var(--brand-gray);
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
