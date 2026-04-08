@@ -86,7 +86,7 @@ export function Navbar() {
 
                 {/* Dropdown Menu */}
                 {link.children && activeDropdown === link.name && (
-                  <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200 origin-top">
+                  <div className="absolute top-full left-0 w-56 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200 origin-top">
                     <div className="py-2">
                       {link.children.map((child) => (
                         <Link

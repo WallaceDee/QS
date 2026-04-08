@@ -31,16 +31,54 @@ const contactInfo = [
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setError('')
     setIsSubmitting(true)
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    setSubmitted(true)
-    setIsSubmitting(false)
+
+    const formData = new FormData(e.currentTarget)
+    const payload = {
+      name: formData.get('name') as string,
+      phone: (formData.get('phone') as string) || '',
+      email: formData.get('email') as string,
+      company: formData.get('company') as string || undefined,
+      brand: formData.get('brand') as string || undefined,
+      website: formData.get('website') as string || undefined,
+      message: formData.get('message') as string,
+    }
+
+    if (!payload.phone) {
+      setError('请填写联系电话')
+      setIsSubmitting(false)
+      return
+    }
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+
+      const data = await res.json().catch(() => ({}))
+
+      if (!res.ok) {
+        setError(data.error || '提交失败，请稍后重试')
+        setIsSubmitting(false)
+        return
+      }
+
+      if (data.message) {
+        setError(data.message)
+      }
+      setSubmitted(true)
+    } catch {
+      setError('网络错误，请检查网络连接后重试')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -48,7 +86,7 @@ export default function ContactPage() {
       <Navbar />
       <main className="pt-20">
         {/* Hero Section */}
-        <section 
+        <section
           className="py-20 md:py-28 relative overflow-hidden"
           style={{ background: 'linear-gradient(135deg, #F5F7FA 0%, #E6F2FF 100%)' }}
         >
@@ -93,20 +131,22 @@ export default function ContactPage() {
                       <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                           <label htmlFor="name" className="block text-sm font-medium text-brand-gray">姓名 *</label>
-                          <input 
-                            id="name" 
+                          <input
+                            id="name"
+                            name="name"
                             type="text"
-                            placeholder="请输入您的姓名" 
-                            required 
+                            placeholder="请输入您的姓名"
+                            required
                             className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 outline-none transition-all"
                           />
                         </div>
                         <div className="space-y-2">
                           <label htmlFor="company" className="block text-sm font-medium text-brand-gray">公司名称</label>
-                          <input 
-                            id="company" 
+                          <input
+                            id="company"
+                            name="company"
                             type="text"
-                            placeholder="请输入公司名称" 
+                            placeholder="请输入公司名称"
                             className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 outline-none transition-all"
                           />
                         </div>
@@ -115,20 +155,46 @@ export default function ContactPage() {
                       <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                           <label htmlFor="email" className="block text-sm font-medium text-brand-gray">电子邮箱 *</label>
-                          <input 
-                            id="email" 
+                          <input
+                            id="email"
+                            name="email"
                             type="email"
-                            placeholder="请输入邮箱地址" 
-                            required 
+                            placeholder="请输入邮箱地址"
+                            required
                             className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 outline-none transition-all"
                           />
                         </div>
                         <div className="space-y-2">
-                          <label htmlFor="phone" className="block text-sm font-medium text-brand-gray">联系电话</label>
-                          <input 
-                            id="phone" 
+                          <label htmlFor="phone" className="block text-sm font-medium text-brand-gray">联系电话 *</label>
+                          <input
+                            id="phone"
+                            name="phone"
                             type="tel"
-                            placeholder="请输入联系电话" 
+                            placeholder="请输入联系电话"
+                            required
+                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 outline-none transition-all"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <label htmlFor="brand" className="block text-sm font-medium text-brand-gray">品牌名称</label>
+                          <input
+                            id="brand"
+                            name="brand"
+                            type="text"
+                            placeholder="请输入品牌名称"
+                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 outline-none transition-all"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label htmlFor="website" className="block text-sm font-medium text-brand-gray">官网地址</label>
+                          <input
+                            id="website"
+                            name="website"
+                            type="url"
+                            placeholder="https://"
                             className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 outline-none transition-all"
                           />
                         </div>
@@ -136,8 +202,9 @@ export default function ContactPage() {
 
                       <div className="space-y-2">
                         <label htmlFor="message" className="block text-sm font-medium text-brand-gray">需求描述 *</label>
-                        <textarea 
-                          id="message" 
+                        <textarea
+                          id="message"
+                          name="message"
                           placeholder="请简要描述您的需求或问题"
                           rows={5}
                           required
@@ -145,8 +212,14 @@ export default function ContactPage() {
                         />
                       </div>
 
-                      <button 
-                        type="submit" 
+                      {error && (
+                        <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm">
+                          {error}
+                        </div>
+                      )}
+
+                      <button
+                        type="submit"
                         className="btn-primary w-full gap-2"
                         disabled={isSubmitting}
                       >

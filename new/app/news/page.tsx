@@ -1,68 +1,52 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import { Navbar } from '../components/Navbar'
 import { Footer } from '../components/Footer'
 import { Calendar, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
-const newsItems = [
-  {
-    title: '趣搜科技发布行业首份GEO白皮书，引领AI搜索营销新纪元',
-    date: '2026年2月1日',
-    category: '公司新闻',
-    excerpt: '趣搜科技正式发布《GEO驱动企业营销新增长白皮书》，这是国内GEO行业首份权威研究报告...',
-    link: '/news/milestone-2026',
-    featured: true,
-  },
-  {
-    title: '趣搜科技琶洲运营中心正式开业',
-    date: '2025年8月15日',
-    category: '公司新闻',
-    excerpt: '趣搜科技位于广州琶洲欧派国际广场的全新运营中心正式投入使用，标志着公司服务能力全面升级...',
-    link: '/news',
-    featured: false,
-  },
-  {
-    title: '趣搜科技荣获2024广东省代理机构发明专利授权率百强榜',
-    date: '2024年12月20日',
-    category: '荣誉资质',
-    excerpt: '凭借在AI营销领域的技术创新，趣搜科技成功入选广东省代理机构发明专利授权率百强榜...',
-    link: '/news',
-    featured: false,
-  },
-  {
-    title: 'GEO培训课程学员突破6000人',
-    date: '2024年10月10日',
-    category: '业务动态',
-    excerpt: '趣搜科技GEO培训课程累计学员突破6000人，成为国内最受欢迎的GEO培训品牌...',
-    link: '/news',
-    featured: false,
-  },
-  {
-    title: '趣搜科技与多家知名企业达成战略合作',
-    date: '2024年8月5日',
-    category: '合作动态',
-    excerpt: '趣搜科技宣布与多家行业领军企业达成战略合作，共同推进GEO技术在垂直行业的应用...',
-    link: '/news',
-    featured: false,
-  },
-]
-
 const categoryColors: Record<string, string> = {
   '公司新闻': 'bg-brand-blue-light text-brand-blue',
-  '荣誉资质': 'bg-brand-green-light text-brand-green',
-  '业务动态': 'bg-brand-orange-light text-brand-orange',
+  '荣誉资质': 'bg-green-100 text-green-700',
+  '业务动态': 'bg-orange-100 text-orange-700',
   '合作动态': 'bg-purple-100 text-purple-600',
 }
 
+type NewsItem = {
+  id: number
+  title: string
+  slug: string
+  date: string
+  category: string
+  excerpt: string
+  coverImage: string | null
+  featured: boolean
+  createdAt: string
+}
+
 export default function NewsPage() {
-  const featuredNews = newsItems.find(n => n.featured)
-  const regularNews = newsItems.filter(n => !n.featured)
+  const [newsData, setNewsData] = useState<{ list: NewsItem[]; total: number; page: number; totalPages: number } | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [page, setPage] = useState(1)
+
+  useEffect(() => {
+    setLoading(true)
+    fetch(`/api/news?page=${page}`)
+      .then((res) => res.json())
+      .then((d) => setNewsData(d))
+      .finally(() => setLoading(false))
+  }, [page])
+
+  const featuredNews = newsData?.list.find(n => n.featured) ?? null
+  const regularNews = newsData?.list.filter(n => !n.featured) ?? []
 
   return (
     <>
       <Navbar />
       <main className="pt-20">
         {/* Hero Section */}
-        <section 
+        <section
           className="py-20 md:py-28 relative overflow-hidden"
           style={{ background: 'linear-gradient(135deg, #F5F7FA 0%, #E6F2FF 100%)' }}
         >
@@ -88,20 +72,30 @@ export default function NewsPage() {
             <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20">
               <div className="max-w-4xl mx-auto">
                 <div className="text-sm text-brand-gray-light mb-4">精选新闻</div>
-                <Link 
-                  href={featuredNews.link}
+                <Link
+                  href={`/news/${featuredNews.slug}`}
                   className="group block bg-brand-bg rounded-3xl overflow-hidden hover:shadow-lg transition-all duration-300"
                 >
                   <div className="grid md:grid-cols-2">
-                    <div className="aspect-video md:aspect-auto bg-gradient-to-br from-brand-blue to-brand-green flex items-center justify-center">
-                      <div className="text-white text-center p-8">
-                        <div className="text-6xl mb-4">📰</div>
-                        <div className="text-xl font-bold">{featuredNews.category}</div>
-                      </div>
+                    <div className="aspect-video md:aspect-auto relative overflow-hidden">
+                      {featuredNews.coverImage ? (
+                        <img
+                          src={featuredNews.coverImage}
+                          alt={featuredNews.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-brand-blue to-brand-green flex items-center justify-center">
+                          <div className="text-white text-center p-8">
+                            <div className="text-6xl mb-4">📰</div>
+                            <div className="text-xl font-bold">{featuredNews.category}</div>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <div className="p-8 md:p-12">
+                    <div className="p-8 md:p-12 flex flex-col justify-center">
                       <div className="flex items-center gap-3 mb-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${categoryColors[featuredNews.category]}`}>
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${categoryColors[featuredNews.category] || 'bg-white/10 text-white/70'}`}>
                           {featuredNews.category}
                         </span>
                         <span className="flex items-center gap-1 text-sm text-brand-gray-light">
@@ -132,30 +126,74 @@ export default function NewsPage() {
           <div className="w-full px-4 sm:px-6 lg:px-12 xl:px-20">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-2xl font-bold text-brand-gray mb-8">更多新闻</h2>
-              
-              <div className="space-y-6">
-                {regularNews.map((news, index) => (
-                  <Link
-                    key={index}
-                    href={news.link}
-                    className="group block bg-white rounded-2xl p-6 hover:shadow-lg transition-all duration-300"
-                  >
-                    <div className="flex flex-wrap items-center gap-3 mb-3">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${categoryColors[news.category]}`}>
-                        {news.category}
+
+              {loading ? (
+                <div className="text-center py-12 text-brand-gray-light">加载中...</div>
+              ) : (
+                <>
+                  <div className="space-y-6">
+                    {regularNews.map((news) => (
+                      <Link
+                        key={news.id}
+                        href={`/news/${news.slug}`}
+                        className="group flex items-stretch bg-white rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 h-36"
+                      >
+                        <div className="w-40 flex-shrink-0 overflow-hidden h-full">
+                          {news.coverImage ? (
+                            <img
+                              src={news.coverImage}
+                              alt={news.title}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-brand-blue/10 to-brand-green/10 flex items-center justify-center">
+                              <div className="text-3xl">📰</div>
+                            </div>
+                          )}
+                        </div>
+                        <div className="p-6 flex flex-col justify-center flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center gap-3 mb-2">
+                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${categoryColors[news.category] || 'bg-white/10 text-white/70'}`}>
+                              {news.category}
+                            </span>
+                            <span className="flex items-center gap-1 text-sm text-brand-gray-light">
+                              <Calendar className="w-4 h-4" />
+                              {news.date}
+                            </span>
+                          </div>
+                          <h3 className="text-lg font-semibold text-brand-gray mb-1 group-hover:text-brand-blue transition-colors">
+                            {news.title}
+                          </h3>
+                          <p className="text-sm text-brand-gray-light line-clamp-1">{news.excerpt}</p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+
+                  {/* Pagination */}
+                  {newsData && newsData.totalPages > 1 && (
+                    <div className="flex items-center justify-center gap-3 mt-10">
+                      <button
+                        onClick={() => setPage(page - 1)}
+                        disabled={page <= 1}
+                        className="px-5 py-2 rounded-xl border border-brand-blue/20 text-brand-blue font-medium hover:bg-brand-blue/5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                      >
+                        上一页
+                      </button>
+                      <span className="text-sm text-brand-gray-light">
+                        第 {page} / {newsData.totalPages} 页，共 {newsData.total} 条
                       </span>
-                      <span className="flex items-center gap-1 text-sm text-brand-gray-light">
-                        <Calendar className="w-4 h-4" />
-                        {news.date}
-                      </span>
+                      <button
+                        onClick={() => setPage(page + 1)}
+                        disabled={page >= newsData.totalPages}
+                        className="px-5 py-2 rounded-xl border border-brand-blue/20 text-brand-blue font-medium hover:bg-brand-blue/5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                      >
+                        下一页
+                      </button>
                     </div>
-                    <h3 className="text-xl font-semibold text-brand-gray mb-2 group-hover:text-brand-blue transition-colors">
-                      {news.title}
-                    </h3>
-                    <p className="text-brand-gray-light">{news.excerpt}</p>
-                  </Link>
-                ))}
-              </div>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </section>

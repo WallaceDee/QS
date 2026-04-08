@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model ContactSubmission {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  phone     String
+  email     String?
+  company   String?
+  message   String?
+  brand     String?
+  website   String?
+  createdAt DateTime @default(now())
+}
+
+model EmailSettings {
+  id        Int      @id @default(autoincrement())
+  host      String
+  port      Int
+  secure    Boolean  @default(false)
+  user      String
+  pass      String
+  to        String
+  updatedAt DateTime @updatedAt
+}
+
+model Case {
+  id        Int      @id @default(autoincrement())
+  name      String
+  industry  String
+  logo      String
+  coverImage String?
+  challenge String
+  solution  String
+  results   String   // JSON array stored as string
+  color     String
+  createdAt DateTime @default(now())
+}
+
+model News {
+  id        Int      @id @default(autoincrement())
+  title     String
+  slug      String   @unique
+  date      String
+  category  String
+  excerpt   String
+  coverImage String?
+  content   String?
+  featured  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

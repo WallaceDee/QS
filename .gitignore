@@ -45,3 +45,5 @@ next-env.d.ts
 # prisma sqlite
 /prisma/*.db
 /prisma/*.db-journal
+/*/node_modules
+/*/.next
